@@ -7,7 +7,8 @@ module.exports = function (config, logger) {
         database: config.db,
         user: config.user,
         password: config.password,
-        connectionLimit: 10
+        connectionLimit: 10,
+        multipleStatements: true
     });
 
     function exec(query, values) {
@@ -21,13 +22,13 @@ module.exports = function (config, logger) {
     }
 
     function ensureMigrationTableExists() {
-        return exec('create table if not exists `__migrations__` (id bigint NOT NULL)');
+        return exec('create table if not exists `__migrations__` (id varchar(50) NOT NULL)');
     }
 
     return {
         appliedMigrations: function appliedMigrations() {
             return ensureMigrationTableExists().then(function () {
-                return exec('select * from __migrations__');
+                return exec('select * from __migrations__ order by id asc');
             }).then(function (rows) {
                 return rows.map(function (row) { return row.id; });
             });

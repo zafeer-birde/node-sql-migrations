@@ -34,6 +34,10 @@ function getPending(migrationsList, appliedMigrationIds, minMigrationTime) {
     var pending = [];
     migrationsList.forEach(function (migration) {
         var id = migration.match(/^(\d+)/)[0];
+        console.log(id);
+        console.log(migration);
+        console.log(appliedMigrationIds.indexOf(Number(id)));
+        console.log((!minMigrationTime || id >= minMigrationTime));
         if ((!minMigrationTime || id >= minMigrationTime) && appliedMigrationIds.indexOf(Number(id))==-1 && migration.match(/^\d+\_up.*$/)) {
             pending.push(migration);
         }
